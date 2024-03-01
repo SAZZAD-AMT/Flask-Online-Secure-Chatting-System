@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            margin-top: 20px;
+            max-width: 800px;
+        }
+
+        h2 {
+            color: #007bff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .user-profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .user-profile img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-profile p {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #495057;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            background-color: #ffffff;
+            position: relative;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        img.message-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-top: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-content {
+            margin-bottom: 10px;
+            color: #495057;
+        }
+
+        .timestamp {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            color: #6c757d;
+        }
+
+        .file-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .file-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Chat</h2>
+        <p>Welcome, {{ current_user.email }}! <a href="{{ url_for('logout') }}" style="color: #dc3545;">Logout</a></p>
+
+        <!-- User Profile Section -->
+        <div class="user-profile">
+            {% if current_user.profile_picture %}
+                <a href="{{ url_for('uploaded_file', filename=current_user.profile_picture) }}" target="_blank" >
+                    <img src="{{ url_for('uploaded_file', filename=current_user.profile_picture) }}" alt="Profile Picture" style="max-width: 100px; height: auto;">
+                </a>
+            {% else %}
+                <img src="{{ url_for('static', filename='default_profile_picture.jpg') }}" alt="Default Profile Picture" style="max-width: 100px; height: auto;" >
+            {% endif %}
+            <p>{{ current_user.username }}</p>
+            <p><a href="{{ url_for('profile') }}" style="color: #dc3545;">edit</a></p>
+        </div>
+
+
+        <!-- Message Form -->
+        <form method="POST" action="" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="receiver_email">Receiver:</label>
+                <select class="form-control" name="receiver_email" required>
+                    {% for user in users %}
+                    <option value="{{ user.email }}">{{ user.email }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="content">Message:</label>
+                <input type="text" class="form-control" name="content" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Upload Image:</label>
+                <input type="file" class="form-control" name="image">
+            </div>
+            <button type="submit">Send</button>
+        </form>
+
+        <!-- Messages Section -->
+        <h3>Messages</h3>
+        <ul>
+            {% for message in messages %}
+            <li>
+                <div class="message-content">
+                    {{ message.sender.email }}:
+                    {% if message.content %}
+                    {{ message.content }}
+                    {% endif %}
+                </div>
+                {% if message.image %}
+                <img class="message-img" src="{{ url_for('uploaded_file', filename=message.image) }}" alt="Image">
+                {% endif %}
+                <div class="timestamp">
+                    {{ message.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                </div>
+                {% if message.image and message.sender.id != current_user.id %}
+                <div class="file-link">
+                    <a href="{{ url_for('uploaded_file', filename=message.image) }}" target="_blank">
+                        View Image
+                    </a>
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+</html>

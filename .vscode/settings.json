@@ -1,0 +1,12 @@
+{
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 5000,
+            "driver": "SQLite",
+            "name": "mas",
+            "group": "mas",
+            "database": "${workspaceFolder:chating system}/instance/site.db"
+        }
+    ]
+}
