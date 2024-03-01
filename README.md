@@ -2,13 +2,13 @@
 
 The provided Flask application facilitates a real-time chat system with user authentication, allowing users to exchange messages and images. It utilizes SQLAlchemy for database management, integrating a User model for account details and a Message model to store chat messages. User authentication is handled through Flask-Login, securing routes and ensuring that only authenticated users can access certain functionalities.
 
+# HINT: ANYONE CAN MAKE IT MORE COMFORTABLE AND PERFECT....
 <div align="center">
   <img src="img/1.png" >
   <img src="img/2.png" >
   <img src="img/3.png" >
   <img src="img/4.png" >
   <img src="img/5.png" >
-  <img src="img/6.png" >
 </div>
 
 The application incorporates Bootstrap for a visually appealing and responsive frontend. Users can log in, sign up, and access their chat interface, where they can send messages, including image uploads. The profile section enables users to personalize their accounts by updating usernames and profile pictures.
